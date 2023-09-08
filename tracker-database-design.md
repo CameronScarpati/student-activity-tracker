@@ -15,7 +15,7 @@
 2. Major Class (boolean &rarr; True/False)
 3. How Many Credits (int &rarr; 1-4)
 4. Subject (String &rarr; "Subject")
-    5. Assignments (All Assignments Listed Under a Specific Class)
+5. Assignments (All Assignments Listed Under a Specific Class)
 
 ---
 
@@ -36,5 +36,9 @@ This is all under a specific assignment.
 
 This is all under a specific assignment.
 - Actual Grade
-- Feedback (if applicable)
-    *Check if empty*
+
+---
+
+### Feedback
+
+1. Feedback from teacher (String)
