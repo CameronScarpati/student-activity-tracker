@@ -25,6 +25,7 @@
 2. Assignment Type (String &rarr; "Quiz/Project/Paper/Homework(General)")
 3. Expected Time? (int &rarr; "Minutes")
 4. Due Date (Date in MM/DD/YYYY)
+5. Grade Percentage in Syllabus (Double &rarr; 0.XX)
 
 *&darr; Once the assignment is completed &darr;*
 

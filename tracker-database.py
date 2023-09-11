@@ -25,6 +25,7 @@ class AssignmentDB(BaseModel):
     assignmentType = CharField()
     expectedTime = IntegerField()
     dueDate = DateTimeField()
+    gradePercentage = DecimalField()
 
     # Submission
     actualTime = IntegerField()
