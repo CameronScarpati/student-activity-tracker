@@ -15,7 +15,7 @@ Errors: 500 (if semester is already created)
 
 NO REQUEST BODY
 
-Response: `[{"class_id" : Integer, "title" : String, "credit" : Integer, "Subject" : String, "assignments" : [Integer]}, ...]`
+Response: `[{"id" : Integer, "semester" : String, "classes" : [Integer]}, ...]`
 
 Errors: 404 (if semester id does not exist)
 
@@ -23,7 +23,7 @@ Errors: 404 (if semester id does not exist)
 
 NO REQUEST BODY
 
-Response: `[{"id" : Integer, "semester" : String, "classes" : [Integer]}, ...]`
+Response: `[{"id" : Integer, "semester" : String}, ...]`
 
 ---
 
@@ -38,9 +38,9 @@ Response: class id (Integer)
 
 NO REQUEST BODY
 
-Response: `{"title" : String, "credit" : Integer, "subject": String, "assignments" : [Integer]}`
+Response: `{"id" : Integer, "title" : String, "credit" : Integer, "subject": String, "assignments" : [Integer]}`
 
-Errors: 404 (if semeseter id is not found), 404 (if class id is not found), 500 (if class is not in that semester)
+Errors: 404 (if semester id is not found), 404 (if class id is not found), 500 (if class is not in that semester or semester does not contain that class)
 
 Note: assignments contains a list of assignment ids
 
@@ -48,7 +48,7 @@ Note: assignments contains a list of assignment ids
 
 NO REQUEST BODY
 
-Response: `[{"id" : Integer, "title" : String, "user_id" : Integer, "assignments": [Integer]}, ... ]`
+Response: `[{"id" : Integer, "title" : String, "credit" : Integer, "subject" : "String"}, ... ]`
 
 ---
 
