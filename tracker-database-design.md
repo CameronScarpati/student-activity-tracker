@@ -27,19 +27,16 @@
 4. Due Date (Date in MM/DD/YYYY)
 5. Grade Percentage in Syllabus (Double &rarr; 0.XX)
 
-*&darr; Once the assignment is completed &darr;*
+---
 
-This is all under a specific assignment.
-- Actual Time Taken
-- Expected Grade
-
-*&darr; Once the assignment is graded &darr;*
-
-This is all under a specific assignment.
-- Actual Grade
+### Grades and Expected Time
+1. Actual Time Taken
+2. Expected Grade
+3. Submission Time
 
 ---
 
 ### Feedback
 
 1. Feedback from teacher (String)
+2. Actual grade on the assignment

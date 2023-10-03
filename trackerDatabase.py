@@ -1,6 +1,6 @@
 from peewee import *
 
-studentActivityTracker_DB = SqliteDatabase("student-activity-tracker.db")
+studentActivityTracker_DB = SqliteDatabase("trackerDatabase.db")
 
 class BaseModel(Model):
     class Meta:
@@ -18,7 +18,6 @@ class ClassDB(BaseModel):
     subject = CharField()
 
 class AssignmentDB(BaseModel):
-    # Creation
     semester_id = ForeignKeyField(SemesterDB, backref = "assignments")
     class_id = ForeignKeyField(ClassDB, backref = "assignments")
     id = AutoField()
@@ -26,13 +25,15 @@ class AssignmentDB(BaseModel):
     expectedTime = IntegerField()
     dueDate = DateTimeField()
     gradePercentage = DecimalField()
-
-    # Submission
+    
+class SubmissionDB(BaseModel):
+    semester_id = ForeignKeyField(SemesterDB, backref = "submissions")
+    class_id = ForeignKeyField(ClassDB, backref = "submissions")
+    assignment_id = ForeignKeyField(AssignmentDB, backref = "submissions")
+    id = AutoField()
     actualTime = IntegerField()
     expectedGrade = IntegerField()
-
-    # Graded
-    actualGrade = IntegerField()
+    submissionTime = DateTimeField()
 
 class FeedbackDB(BaseModel):
     semester_id = ForeignKeyField(SemesterDB, backref = "feedbacks")
@@ -40,6 +41,7 @@ class FeedbackDB(BaseModel):
     assignment_id = ForeignKeyField(AssignmentDB, backref = "feedbacks")
     id = AutoField()
     feedback = TextField()
+    actualGrade = IntegerField()
 
 if __name__ == "__main__":
     pass
