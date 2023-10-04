@@ -102,13 +102,14 @@ Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (
 Response: submission id (Integer) + ", " + submission time (DateTime)
 
 # Submission
-## `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/submissions/[submission_id]`
+## `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/submissions/latest`
+## `This request gets the "latest" submission`
 
 NO REQUEST BODY
 
-Response: `{"actualTime" : Integer, "expectedTime" : Integer, "expectedGrade" : Integer, "gradePercentage" : Decimal, "submissionTime" : DateTimeField, "dueDate" : DateTimeField, "assignmentType" : String}`
+Response: `{"submissionNumber" : Integer, "actualTime" : Integer, "expectedTime" : Integer, "expectedGrade" : Integer, "gradePercentage" : Decimal, "submissionTime" : DateTimeField, "dueDate" : DateTimeField, "assignmentType" : String}`
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404 (if submission id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment), 500 (if submission is not for that assignment)
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404 (there are no submissions for this assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
 
 ---
 
@@ -135,6 +136,6 @@ Response: feedback id (Integer)
 
 NO REQUEST BODY
 
-Response: `{"actualGrade" : Integer, "feedback" : String/Text}`
+Response: `{"actualGrade" : Integer, "expectedGrade" : Integer, "gradePercentage" : Decimal, "feedback" : String/Text}`
 
 Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404 (if feedback id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment), 500 (if feedback is not for that assignment)

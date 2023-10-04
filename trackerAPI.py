@@ -19,6 +19,8 @@ parser.add_argument("dueDate")
 parser.add_argument("gradePercentage")
 parser.add_argument("actualTime")
 parser.add_argument("expectedGrade")
+parser.add_argument("actualGrade")
+parser.add_argument("feedback")
 
 studentActivityTracker_DB.connect()
 studentActivityTracker_DB.create_tables([SemesterDB, ClassDB, AssignmentDB, SubmissionDB, FeedbackDB])
@@ -210,34 +212,103 @@ Please input a valid assignment id for this class or a valid class id for this a
         return str(id) + ", " + str(submissionTime), 201
     
 class Submission(Resource):
-    def get(self, semester_id: int, class_id: int, assignment_id: int, submission_id: int):
+    def get(self, semester_id: int, class_id: int, assignment_id: int):
         if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
         if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
-        if int(submission_id) > SubmissionDB.select().count() or int(submission_id) < 1:
-            abort(404, message = "This submission id does not exist. Please input a valid submission id.")
+        if SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)).get() == 0:
+            abort(404, message = "There are no submissions for this assignment.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
 Please input a valid class id for this semester or a valid semester id for this class.")
         if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).get().class_id.id != int(class_id):
             abort(500, message = "This assignment id is not contained within this class. \
 Please input a valid assignment id for this class or a valid class id for this assignment.")
-        if SubmissionDB.select().where(SubmissionDB.id == int(submission_id)).get().assignment_id.id != int(assignment_id):
-            abort(500, message = "This assignment id is not contained within this class. \
-Please input a valid assignment id for this class or a valid class id for this assignment.")
         
-        foundSubmission = SubmissionDB.get(SubmissionDB.id == submission_id)
+        foundSubmission = SubmissionDB.get(SubmissionDB.id == SubmissionDB.select().count())
         foundAssignment = AssignmentDB.get(AssignmentDB.id == foundSubmission.assignment_id)
         dueDateString = foundAssignment.dueDate.strftime("%Y-%m-%d %H:%M:%S")
         gradePercentage = float(foundAssignment.gradePercentage)
         submissionTimeString = foundSubmission.submissionTime.strftime("%Y-%m-%d %H:%M:%S")
 
-        return {"actualTime" : foundSubmission.actualTime, "expectedTime" : foundAssignment.expectedTime
+        return {"submissionNumber" : foundSubmission.id, "actualTime" : foundSubmission.actualTime, "expectedTime" : foundAssignment.expectedTime
                 , "expectedGrade" : foundSubmission.expectedGrade, "gradePercentage" : gradePercentage
                 , "submissionTime" : submissionTimeString, "dueDate" : dueDateString, "assignmentType" : foundAssignment.assignmentType}, 200
+
+class Feedbacks(Resource):
+    def get(self, semester_id: int, class_id: int, assignment_id: int):
+        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+            abort(404, message = "This class id does not exist. Please input a valid class id.")
+        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+            abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
+        if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
+            abort(500, message = "This class id is not contained within this semester. \
+Please input a valid class id for this semester or a valid semester id for this class.")
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).get().class_id.id != int(class_id):
+            abort(500, message = "This assignment id is not contained within this class. \
+Please input a valid assignment id for this class or a valid class id for this assignment.")
+        
+        feedbacks = []
+
+        for feedbackSelect in FeedbackDB.select().where(FeedbackDB.assignment_id == assignment_id):
+            feedbacks.append({"id" : feedbackSelect.id, "actualGrade" : feedbackSelect.actualGrade
+                              , "feedback" : feedbackSelect.feedback})
+                
+        return feedbacks, 200
+    
+    def post(self, semester_id: int, class_id: int, assignment_id: int):
+        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+            abort(404, message = "This class id does not exist. Please input a valid class id.")
+        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+            abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
+        if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
+            abort(500, message = "This class id is not contained within this semester. \
+Please input a valid class id for this semester or a valid semester id for this class.")
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).get().class_id.id != int(class_id):
+            abort(500, message = "This assignment id is not contained within this class. \
+Please input a valid assignment id for this class or a valid class id for this assignment.")
+
+        args = parser.parse_args()
+        id = FeedbackDB.select().count() + 1
+
+        FeedbackDB.create(semester_id = semester_id, class_id = class_id, assignment_id = assignment_id, id = int(id)
+                        , actualGrade = args["actualGrade"], feedback = args["feedback"])
+
+        return str(id), 201
+    
+class Feedback(Resource):
+    def get(self, semester_id: int, class_id: int, assignment_id: int, feedback_id: int):
+        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+            abort(404, message = "This class id does not exist. Please input a valid class id.")
+        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+            abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
+        if int(feedback_id) > FeedbackDB.select().count() or int(feedback_id) < 1:
+            abort(404, message = "This feedback id does not exist. Please input a valid feedback id.")
+        if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
+            abort(500, message = "This class id is not contained within this semester. \
+Please input a valid class id for this semester or a valid semester id for this class.")
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).get().class_id.id != int(class_id):
+            abort(500, message = "This assignment id is not contained within this class. \
+Please input a valid assignment id for this class or a valid class id for this assignment.")
+        if FeedbackDB.select().where(FeedbackDB.id == int(feedback_id)).get().assignment_id.id != int(assignment_id):
+            abort(500, message = "This feedback id is not contained within this assignment. \
+Please input a valid feedback id for this assignment or a valid assingment id for this feedback.")
+        
+        foundFeedback = FeedbackDB.get(FeedbackDB.id == feedback_id)
+        foundAssignment = AssignmentDB.get(AssignmentDB.id == foundFeedback.assignment_id)
+        gradePercentage = float(foundAssignment.gradePercentage)
+
+        return {"actualGrade" : foundFeedback.actualGrade, "expectedGrade" : foundAssignment.expectedTime
+                , "gradePercentage" : gradePercentage, "feedback" : foundFeedback.feedback}, 200
 
 api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
@@ -246,9 +317,9 @@ api.add_resource(Class, "/semesters/<semester_id>/classes/<class_id>")
 api.add_resource(Assignments, "/semesters/<semester_id>/classes/<class_id>/assignments")
 api.add_resource(Assignment, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>")
 api.add_resource(Submissions, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions")
-api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/<submission_id>")
-# api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedbacks")
-# api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedbacks/<feedback_id>")
+api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/latest")
+api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedbacks")
+api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedbacks/<feedback_id>")
 
 if __name__ == "__main__":
     app.run(debug = True)
