@@ -114,28 +114,45 @@ Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (
 ---
 
 # Feedbacks
-## `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedbacks`
+## `GET /semesters/[semester_id]/classes/[class_id]/feedback`
 
 NO REQUEST BODY
 
 Response: `[{"id" : Integer, "actualGrade" : Integer, "feedback" : String/Text}, ...]`
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
-
-## `POST /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedbacks`
-
-
-Request Body: `{"actualGrade" : Integer, "feedback" : String/Text}`
-
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
-
-Response: feedback id (Integer)
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 500 (if class is not in that semester or semester does not contain that class)
 
 # Feedback
-## `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedbacks/[feedback_id]`
+## `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
 
 NO REQUEST BODY
 
 Response: `{"actualGrade" : Integer, "expectedGrade" : Integer, "gradePercentage" : Decimal, "feedback" : String/Text}`
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404 (if feedback id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment), 500 (if feedback is not for that assignment)
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404 (if feedback does not exist), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
+
+## `POST /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+
+
+Request Body: `{"actualGrade" : Integer, "feedback" : String/Text}`
+
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if feedback is already created for that assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
+
+Response: feedback id (Integer)
+
+## `PUT /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+
+
+Request Body: `{"actualGrade" : Integer, "feedback" : String/Text}`
+
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if feedback has not been created for that assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
+
+Response: feedback id (Integer)
+
+## `PATCH /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+
+Request Body: `{"actualGrade" : Integer}`
+
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if feedback has not been created for that assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
+
+Response: feedback id (Integer)
