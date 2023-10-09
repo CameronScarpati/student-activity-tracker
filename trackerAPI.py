@@ -25,6 +25,8 @@ parser.add_argument("feedback")
 studentActivityTracker_DB.connect()
 studentActivityTracker_DB.create_tables([SemesterDB, ClassDB, AssignmentDB, SubmissionDB, FeedbackDB])
 
+#.exists(), .getOrNone()
+
 class Semesters(Resource):
     def get(self):
         semesters = []
@@ -228,7 +230,8 @@ Please input a valid class id for this semester or a valid semester id for this 
             abort(500, message = "This assignment id is not contained within this class. \
 Please input a valid assignment id for this class or a valid class id for this assignment.")
         
-        foundSubmission = SubmissionDB.get(SubmissionDB.id == SubmissionDB.select().count())
+        foundSubmission = SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)
+                                                      ).order_by(SubmissionDB.submissionTime.desc()).limit(1).get()
         foundAssignment = AssignmentDB.get(AssignmentDB.id == foundSubmission.assignment_id)
         dueDateString = foundAssignment.dueDate.strftime("%Y-%m-%d %H:%M:%S")
         gradePercentage = float(foundAssignment.gradePercentage)
@@ -277,7 +280,7 @@ Please input a valid assignment id for this class or a valid class id for this a
         foundAssignment = AssignmentDB.get(AssignmentDB.id == foundFeedback.assignment_id)
         gradePercentage = float(foundAssignment.gradePercentage)
 
-        return {"actualGrade" : foundFeedback.actualGrade, "expectedGrade" : foundAssignment.expectedTime
+        return {"actualGrade" : foundFeedback.actualGrade, "expectedGrade" : foundAssignment.expectedGrade
                 , "gradePercentage" : gradePercentage, "feedback" : foundFeedback.feedback}, 200
     
     def post(self, semester_id: int, class_id: int, assignment_id: int):
