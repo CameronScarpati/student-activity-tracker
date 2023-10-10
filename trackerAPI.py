@@ -27,6 +27,10 @@ studentActivityTracker_DB.create_tables([SemesterDB, ClassDB, AssignmentDB, Subm
 
 #.exists(), .getOrNone()
 
+class Health(Resource):
+    def get(self):
+        return {"version" : "TBA"}
+
 class Semesters(Resource):
     def get(self):
         semesters = []
@@ -367,6 +371,8 @@ api.add_resource(Submissions, "/semesters/<semester_id>/classes/<class_id>/assig
 api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/latest")
 api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedback")
 api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback")
+api.add_resource(Health, "/_up")
+
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug=True,host="0.0.0.0",port=5027)
