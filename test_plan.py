@@ -3,13 +3,15 @@ from testplan.testing.multitest import MultiTest
 from testplan.testing.multitest.driver.app import App
 from testplan.testing.multitest.driver.http.client import HTTPClient
 import os
-from tests.example_multitest import ExampleMultiTestSuite
+from tests.semester_multitest import SemesterMultiTestSuite
+from tests.class_multitest import ClassMultiTestSuite
+
+
 @test_plan(name="Student-Activity-Tracker-Tests")
 def main(plan):
     plan.add(
         MultiTest(
-            "Example Multitest Suite",
-            [ExampleMultiTestSuite()],
+            name = "Suites", suites=[ClassMultiTestSuite(), SemesterMultiTestSuite()],
             environment=[
                 # TODO: This should also include your DB! But right now it's hardcoded.
                 App(name="rest", binary="python",

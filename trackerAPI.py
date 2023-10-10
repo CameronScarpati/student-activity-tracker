@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from trackerDatabase import *
-import json
 import datetime
 
 app = Flask(__name__)
@@ -27,10 +26,6 @@ studentActivityTracker_DB.create_tables([SemesterDB, ClassDB, AssignmentDB, Subm
 
 #.exists(), .getOrNone()
 
-class Health(Resource):
-    def get(self):
-        return {"version" : "TBA"}
-
 class Semesters(Resource):
     def get(self):
         semesters = []
@@ -54,7 +49,7 @@ class Semesters(Resource):
     
 class Semester(Resource):
     def get(self, semester_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
 
         foundSemester = SemesterDB.get(SemesterDB.id == int(semester_id))
@@ -68,7 +63,7 @@ class Semester(Resource):
 
 class Classes(Resource):
     def get(self, semester_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
 
         classes = []
@@ -83,7 +78,7 @@ class Classes(Resource):
 
         id = ClassDB.select().count() + 1
 
-        if int(semester_id) > SemesterDB.select().count():
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(500, message = "This semester id does not exist. Please input a valid semester id.")
 
         ClassDB.create(semester_id = semester_id, id = int(id), title = args["title"], 
@@ -93,9 +88,9 @@ class Classes(Resource):
     
 class Class(Resource):
     def get(self, semester_id: int, class_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -108,9 +103,9 @@ Please input a valid class id for this semester or a valid semester id for this 
 
 class Assignments(Resource):
     def get(self, semester_id: int, class_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -129,9 +124,9 @@ Please input a valid class id for this semester or a valid semester id for this 
         return assignments, 200
     
     def post(self, semester_id: int, class_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -148,9 +143,9 @@ Please input a valid class id for this semester or a valid semester id for this 
 
 class Assignment(Resource):
     def get(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -170,9 +165,9 @@ Please input a valid assignment id for this class or a valid class id for this a
 
 class Submissions(Resource):
     def get(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -194,9 +189,9 @@ Please input a valid assignment id for this class or a valid class id for this a
         return submissions, 200
     
     def post(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -219,9 +214,9 @@ Please input a valid assignment id for this class or a valid class id for this a
     
 class Submission(Resource):
     def get(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -247,9 +242,9 @@ Please input a valid assignment id for this class or a valid class id for this a
 
 class Feedbacks(Resource):
     def get(self, semester_id: int, class_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -265,9 +260,9 @@ Please input a valid class id for this semester or a valid semester id for this 
     
 class Feedback(Resource):
     def get(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -288,9 +283,9 @@ Please input a valid assignment id for this class or a valid class id for this a
                 , "gradePercentage" : gradePercentage, "feedback" : foundFeedback.feedback}, 200
     
     def post(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -312,9 +307,9 @@ Please input a valid assignment id for this class or a valid class id for this a
         return str(id), 201
     
     def put(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -337,9 +332,9 @@ Please input a valid assignment id for this class or a valid class id for this a
         return str(foundFeedback.id), 201
     
     def patch(self, semester_id: int, class_id: int, assignment_id: int):
-        if int(semester_id) > SemesterDB.select().count() or int(semester_id) < 1:
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
-        if int(class_id) > ClassDB.select().count() or int(class_id) < 1:
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
@@ -371,7 +366,6 @@ api.add_resource(Submissions, "/semesters/<semester_id>/classes/<class_id>/assig
 api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/latest")
 api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedback")
 api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback")
-api.add_resource(Health, "/_up")
 
 
 if __name__ == "__main__":
