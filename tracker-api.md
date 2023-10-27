@@ -37,9 +37,13 @@ NO REQUEST BODY
 
 Response: `[{"id" : Integer, "title" : String, "credit" : Integer, "subject" : "String"}, ... ]`
 
+Errors: 404 (if semester id is not found)
+
 ## `POST /semesters/[semester_id]/classes`
 
 Request Body: `{"title" : String, "credit" : Integer, "subject": String}`
+
+Errors: 404 (if semester id is not found)
 
 Response: class id (Integer)
 
@@ -78,7 +82,7 @@ Response: assignment id (Integer)
 
 NO REQUEST BODY
 
-Response: `{"id" : Integer, "assignmentType" : String, "expectedTime" : Integer, "dueDate" : DateTimeField, "gradePercentage" : Decimal}`
+Response: `{"assignmentType" : String, "expectedTime" : Integer, "dueDate" : DateTimeField, "gradePercentage" : Decimal}`
 
 Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
 

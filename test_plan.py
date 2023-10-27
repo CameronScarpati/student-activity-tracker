@@ -5,13 +5,13 @@ from testplan.testing.multitest.driver.http.client import HTTPClient
 import os
 from tests.semester_multitest import SemesterMultiTestSuite
 from tests.class_multitest import ClassMultiTestSuite
-
+from tests.assignment_multitest import AssignmentMultiTestSuite
 
 @test_plan(name="Student-Activity-Tracker-Tests")
 def main(plan):
     plan.add(
         MultiTest(
-            name = "Suites", suites=[ClassMultiTestSuite(), SemesterMultiTestSuite()],
+            name = "Suites", suites=[AssignmentMultiTestSuite(), ClassMultiTestSuite(), SemesterMultiTestSuite()],
             environment=[
                 # TODO: This should also include your DB! But right now it's hardcoded.
                 App(name="rest", binary="python",

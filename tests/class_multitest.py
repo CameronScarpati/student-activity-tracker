@@ -18,7 +18,7 @@ class ClassMultiTestSuite(object):
         env.http_client.get("/semesters/0/classes")
         response = env.http_client.receive()
 
-        assert response.status_code == 404, "Verify /semester/<semester_id> error"
+        assert response.status_code == 404, "Verify /semester/<semester_id>/classes error"
 
     @testcase
     def test_getSemesterTooLarge(self, env, result):
@@ -27,21 +27,21 @@ class ClassMultiTestSuite(object):
 
         assert response.status_code == 404, "Verify /semesters/<semester_id>/classes error"
 
-    # @testcase
-    # def test_postSemesterTooSmall(self, env, result):
-    #     post_data = {"title" : "Methods of Linear Algebra", "credit" : "3", "subject": "Mathematics"}
-    #     env.http_client.post("/semesters/0/classes", json=post_data)
-    #     response = env.http_client.receive()
+    @testcase
+    def test_postSemesterClassTooSmall(self, env, result):
+        post_data = {"title" : "Methods of Linear Algebra", "credit" : "3", "subject": "Mathematics"}
+        env.http_client.post("/semesters/0/classes", json=post_data)
+        response = env.http_client.receive()
         
-    #     assert response.status_code == 404, "Verify /semesters/<semester_id>/classes error"
+        assert response.status_code == 404, "Verify /semesters/<semester_id>/classes error"
 
-    # @testcase
-    # def test_postSemesterTooLarge(self, env, result):
-    #     post_data = {"title" : "Methods of Linear Algebra", "credit" : "3", "subject": "Mathematics"}
-    #     env.http_client.post("/semesters/8/classes", json=post_data)
-    #     response = env.http_client.receive()
+    @testcase
+    def test_postSemesterClassTooLarge(self, env, result):
+        post_data = {"title" : "Methods of Linear Algebra", "credit" : "3", "subject": "Mathematics"}
+        env.http_client.post("/semesters/15/classes", json=post_data)
+        response = env.http_client.receive()
         
-    #     assert response.status_code == 404, "Verify /semesters/<semester_id> error/classes"
+        assert response.status_code == 404, "Verify /semesters/<semester_id> error/classes"
 
     @testcase
     def test_getClassTooSmall(self, env, result):

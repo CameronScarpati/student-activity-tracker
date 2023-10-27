@@ -59,3 +59,7 @@ class SemesterMultiTestSuite(object):
         response = env.http_client.receive()
 
         assert response.status_code == 404, "Verify /semester/<semester_id> error"
+
+        post_data = {"title" : "Methods of Linear Algebra", "credit" : "3", "subject": "Mathematics"}
+        env.http_client.post("/semesters/0/classes", json=post_data)
+        response = env.http_client.receive()

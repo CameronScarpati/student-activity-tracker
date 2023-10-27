@@ -24,8 +24,6 @@ parser.add_argument("feedback")
 studentActivityTracker_DB.connect()
 studentActivityTracker_DB.create_tables([SemesterDB, ClassDB, AssignmentDB, SubmissionDB, FeedbackDB])
 
-#.exists(), .getOrNone()
-
 class Semesters(Resource):
     def get(self):
         semesters = []
@@ -79,7 +77,7 @@ class Classes(Resource):
         id = ClassDB.select().count() + 1
 
         if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
-            abort(500, message = "This semester id does not exist. Please input a valid semester id.")
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
 
         ClassDB.create(semester_id = semester_id, id = int(id), title = args["title"], 
                        credit = args["credit"], subject = args["subject"])
