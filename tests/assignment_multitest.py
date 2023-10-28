@@ -13,7 +13,6 @@ class AssignmentMultiTestSuite(object):
 
         actual_data = response.json()
         
-
         assert actual_data == expected_data, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
     
     @testcase

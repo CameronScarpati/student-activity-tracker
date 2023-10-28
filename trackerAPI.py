@@ -35,7 +35,11 @@ class Semesters(Resource):
 
     def post(self):
         args = parser.parse_args()
-        id = SemesterDB.select().count() + 1
+        id = SemesterDB.select(fn.Max(SemesterDB.id)).scalar()
+        if id is not None:
+            id += 1
+        else:
+            id = 1
 
         try:
             SemesterDB.create(id = int(id), semester = args["semester"])
@@ -58,6 +62,23 @@ class Semester(Resource):
                 classes.append(aClass.id)
 
         return {"id" : int(semester_id), "semester" : foundSemester.semester, "classes" : classes}, 200
+    
+    def delete(self, semester_id: int):
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+
+        deleteSemester = SemesterDB.delete().where(SemesterDB.id == int(semester_id))
+        deleteSemester.execute()
+        deleteClasses = ClassDB.delete().where(ClassDB.semester_id == int(semester_id))
+        deleteClasses.execute()
+        deleteAssignments = AssignmentDB.delete().where(AssignmentDB.semester_id == int(semester_id))
+        deleteAssignments.execute()
+        deleteSubmissions = SubmissionDB.delete().where(SubmissionDB.semester_id == int(semester_id))
+        deleteSubmissions.execute()
+        deleteFeedbacks = FeedbackDB.delete().where(FeedbackDB.semester_id == int(semester_id))
+        deleteFeedbacks.execute()
+
+        return "", 204
 
 class Classes(Resource):
     def get(self, semester_id: int):
@@ -74,7 +95,11 @@ class Classes(Resource):
     def post(self, semester_id: int):
         args = parser.parse_args()
 
-        id = ClassDB.select().count() + 1
+        id = ClassDB.select(fn.Max(ClassDB.id)).scalar()
+        if id is not None:
+            id += 1
+        else:
+            id = 1
 
         if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
@@ -98,6 +123,22 @@ Please input a valid class id for this semester or a valid semester id for this 
 
         return {"id" : int(class_id), "title" : foundClass.title, 
                 "credit" : foundClass.credit, "subject" : foundClass.subject}, 200
+
+class RemoveClass(Resource):
+    def delete(self, class_id: int):
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
+            abort(404, message = "This class id does not exist. Please input a valid class id.")
+
+        deleteClasses = ClassDB.delete().where(ClassDB.id == int(class_id))
+        deleteClasses.execute()
+        deleteAssignments = AssignmentDB.delete().where(AssignmentDB.class_id == int(class_id))
+        deleteAssignments.execute()
+        deleteSubmissions = SubmissionDB.delete().where(SubmissionDB.class_id == int(class_id))
+        deleteSubmissions.execute()
+        deleteFeedbacks = FeedbackDB.delete().where(FeedbackDB.class_id == int(class_id))
+        deleteFeedbacks.execute()
+
+        return "", 204
 
 class Assignments(Resource):
     def get(self, semester_id: int, class_id: int):
@@ -131,7 +172,11 @@ Please input a valid class id for this semester or a valid semester id for this 
 Please input a valid class id for this semester or a valid semester id for this class.")
 
         args = parser.parse_args()
-        id = AssignmentDB.select().count() + 1
+        id = AssignmentDB.select(fn.Max(AssignmentDB.id)).scalar()
+        if id is not None:
+            id += 1
+        else:
+            id = 1
 
         AssignmentDB.create(semester_id = semester_id, class_id = class_id, id = int(id), assignmentType = args["assignmentType"]
                        , expectedTime = args["expectedTime"], subject = args["subject"], dueDate = args["dueDate"]
@@ -160,6 +205,22 @@ Please input a valid assignment id for this class or a valid class id for this a
         
         return {"assignmentType" : foundAssignment.assignmentType, "expectedTime" : foundAssignment.expectedTime
             , "dueDate" : dueDateString, "gradePercentage" : gradePercentage}, 200
+
+class RemoveAssignment(Resource):
+    def delete(self, assignment_id: int):
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
+            abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
+
+        deleteClasses = ClassDB.delete().where(ClassDB.id == int(assignment_id))
+        deleteClasses.execute()
+        deleteAssignments = AssignmentDB.delete().where(AssignmentDB.assignment_id == int(assignment_id))
+        deleteAssignments.execute()
+        deleteSubmissions = SubmissionDB.delete().where(SubmissionDB.assignment_id == int(assignment_id))
+        deleteSubmissions.execute()
+        deleteFeedbacks = FeedbackDB.delete().where(FeedbackDB.assignment_id == int(assignment_id))
+        deleteFeedbacks.execute()
+
+        return "", 204
 
 class Submissions(Resource):
     def get(self, semester_id: int, class_id: int, assignment_id: int):
@@ -201,7 +262,11 @@ Please input a valid class id for this semester or a valid semester id for this 
 Please input a valid assignment id for this class or a valid class id for this assignment.")
 
         args = parser.parse_args()
-        id = SubmissionDB.select().count() + 1
+        id = SubmissionDB.select(fn.Max(SubmissionDB.id)).scalar()
+        if id is not None:
+            id += 1
+        else:
+            id = 1
         submissionTime = datetime.datetime.now()
 
         SubmissionDB.create(semester_id = semester_id, class_id = class_id, assignment_id = assignment_id, id = int(id)
@@ -297,7 +362,11 @@ Please input a valid assignment id for this class or a valid class id for this a
             abort(500, message = "Feedback has already been created")
 
         args = parser.parse_args()
-        id = FeedbackDB.select().count() + 1
+        id = FeedbackDB.select(fn.Max(FeedbackDB.id)).scalar()
+        if id is not None:
+            id += 1
+        else:
+            id = 1
 
         FeedbackDB.create(semester_id = semester_id, class_id = class_id, assignment_id = assignment_id, id = int(id)
                         , actualGrade = args["actualGrade"], feedback = args["feedback"])
@@ -358,8 +427,10 @@ api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
 api.add_resource(Classes, "/semesters/<semester_id>/classes")
 api.add_resource(Class, "/semesters/<semester_id>/classes/<class_id>")
+api.add_resource(RemoveClass, "/classes/<class_id>")
 api.add_resource(Assignments, "/semesters/<semester_id>/classes/<class_id>/assignments")
 api.add_resource(Assignment, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>")
+api.add_resource(RemoveAssignment, "/assignments/<assignment_id>")
 api.add_resource(Submissions, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions")
 api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/latest")
 api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedback")

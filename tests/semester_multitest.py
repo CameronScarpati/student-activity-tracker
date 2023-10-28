@@ -9,12 +9,11 @@ class SemesterMultiTestSuite(object):
         response = env.http_client.receive()
         
         expected_data = [{"id": 1, "semester": "Fall 2023"},
-                        {"id": 2, "semester": "Spring 2024"},
-                        {"id": 3, "semester": "Summer 2024"},
-                        {"id": 4, "semester": "Fall 2025"},
-                        {"id": 5, "semester": "Spring 2026"},
-                        {"id": 6, "semester": "Summer 2026"},
-                        {"id": 7, "semester": "Fall 2026"}]
+                        {"id": 2, "semester": "Summer 2024"},
+                        {"id": 3, "semester": "Fall 2024"},
+                        {"id": 4, "semester": "Spring 2025"},
+                        {"id": 5, "semester": "Summer 2025"},
+                        {"id": 6, "semester": "Fall 2025"}]
         
         actual_data = response.json()
         assert actual_data == expected_data, "Verify /semester endpoint"
@@ -30,11 +29,11 @@ class SemesterMultiTestSuite(object):
 
     @testcase
     def test_getSpecificNoClasses(self, env, result):
-        env.http_client.get("/semesters/7")
+        env.http_client.get("/semesters/6")
         response = env.http_client.receive()
 
         result.dict.match(
-            response.json(), {"id": 7, "semester": "Fall 2026", "classes": []}, "Verify /semester endpoint"
+            response.json(), {"id": 6, "semester": "Fall 2025", "classes": []}, "Verify /semester endpoint"
         )
 
     @testcase
