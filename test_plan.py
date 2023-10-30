@@ -11,7 +11,7 @@ from tests.assignment_multitest import AssignmentMultiTestSuite
 def main(plan):
     plan.add(
         MultiTest(
-            name = "Suites", suites=[AssignmentMultiTestSuite(), ClassMultiTestSuite(), SemesterMultiTestSuite()],
+            name = "Suites", suites=[SemesterMultiTestSuite(), ClassMultiTestSuite(), AssignmentMultiTestSuite()],
             environment=[
                 # TODO: This should also include your DB! But right now it's hardcoded.
                 App(name="rest", binary="python",
@@ -21,7 +21,6 @@ def main(plan):
             ],
         )
     )
-
 
 if __name__ == "__main__":
     import sys

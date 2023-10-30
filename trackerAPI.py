@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from trackerDatabase import *
-import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 api = Api(app)
@@ -56,12 +56,7 @@ class Semester(Resource):
 
         foundSemester = SemesterDB.get(SemesterDB.id == int(semester_id))
 
-        classes = []
-        for aClass in ClassDB.select():
-            if aClass.semester_id.id == int(semester_id):
-                classes.append(aClass.id)
-
-        return {"id" : int(semester_id), "semester" : foundSemester.semester, "classes" : classes}, 200
+        return {"id" : int(semester_id), "semester" : foundSemester.semester}, 200
     
     def delete(self, semester_id: int):
         if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
@@ -153,11 +148,12 @@ Please input a valid class id for this semester or a valid semester id for this 
         assignments = []
 
         for assignment in AssignmentDB.select().where(AssignmentDB.class_id == int(class_id)):
-            dueDateString = assignment.dueDate.strftime("%Y-%m-%d %H:%M:%S")
+            datetimeObj = assignment.dueDate
+            dueDateJSON = datetimeObj.strftime("%Y-%m-%d %H:%M:%S")
             gradePercentage = float(assignment.gradePercentage)
                 
             assignments.append({"id" : assignment.id, "assignmentType" : assignment.assignmentType
-                                , "expectedTime" : assignment.expectedTime, "dueDate" : dueDateString
+                                , "expectedTime" : assignment.expectedTime, "dueDate" : dueDateJSON
                                 , "gradePercentage" : gradePercentage})
                 
         return assignments, 200
@@ -190,7 +186,7 @@ class Assignment(Resource):
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
-        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -200,20 +196,19 @@ Please input a valid class id for this semester or a valid semester id for this 
 Please input a valid assignment id for this class or a valid class id for this assignment.")
         
         foundAssignment = AssignmentDB.get(AssignmentDB.id == int(assignment_id))
-        dueDateString = foundAssignment.dueDate.strftime("%Y-%m-%d %H:%M:%S")
+        datetimeObj = foundAssignment.dueDate
+        dueDateJSON = datetimeObj.strftime("%Y-%m-%d %H:%M:%S")
         gradePercentage = float(foundAssignment.gradePercentage)
         
         return {"assignmentType" : foundAssignment.assignmentType, "expectedTime" : foundAssignment.expectedTime
-            , "dueDate" : dueDateString, "gradePercentage" : gradePercentage}, 200
+            , "dueDate" : dueDateJSON, "gradePercentage" : gradePercentage}, 200
 
 class RemoveAssignment(Resource):
     def delete(self, assignment_id: int):
         if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
 
-        deleteClasses = ClassDB.delete().where(ClassDB.id == int(assignment_id))
-        deleteClasses.execute()
-        deleteAssignments = AssignmentDB.delete().where(AssignmentDB.assignment_id == int(assignment_id))
+        deleteAssignments = AssignmentDB.delete().where(AssignmentDB.id == int(assignment_id))
         deleteAssignments.execute()
         deleteSubmissions = SubmissionDB.delete().where(SubmissionDB.assignment_id == int(assignment_id))
         deleteSubmissions.execute()
@@ -295,13 +290,15 @@ Please input a valid assignment id for this class or a valid class id for this a
         foundSubmission = SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)
                                                       ).order_by(SubmissionDB.submissionTime.desc()).limit(1).get()
         foundAssignment = AssignmentDB.get(AssignmentDB.id == foundSubmission.assignment_id)
-        dueDateString = foundAssignment.dueDate.strftime("%Y-%m-%d %H:%M:%S")
+        dateString = foundAssignment.dueDate
+        datetimeObj = datetime.strptime(dateString, "%Y-%m-%d %H:%M:%S")
+        dueDateJSON = datetimeObj.strftime("%Y-%m-%d %H:%M:%S")
         gradePercentage = float(foundAssignment.gradePercentage)
         submissionTimeString = foundSubmission.submissionTime.strftime("%Y-%m-%d %H:%M:%S")
 
         return {"submissionNumber" : foundSubmission.id, "actualTime" : foundSubmission.actualTime, "expectedTime" : foundAssignment.expectedTime
                 , "expectedGrade" : foundSubmission.expectedGrade, "gradePercentage" : gradePercentage
-                , "submissionTime" : submissionTimeString, "dueDate" : dueDateString, "assignmentType" : foundAssignment.assignmentType}, 200
+                , "submissionTime" : submissionTimeString, "dueDate" : dueDateJSON, "assignmentType" : foundAssignment.assignmentType}, 200
 
 class Feedbacks(Resource):
     def get(self, semester_id: int, class_id: int):
@@ -427,7 +424,7 @@ api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
 api.add_resource(Classes, "/semesters/<semester_id>/classes")
 api.add_resource(Class, "/semesters/<semester_id>/classes/<class_id>")
-api.add_resource(RemoveClass, "/classes/<class_id>")
+api.add_resource(RemoveClass, "/class/<class_id>")
 api.add_resource(Assignments, "/semesters/<semester_id>/classes/<class_id>/assignments")
 api.add_resource(Assignment, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>")
 api.add_resource(RemoveAssignment, "/assignments/<assignment_id>")

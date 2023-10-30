@@ -24,7 +24,7 @@ Response: semester id (Integer)
 
 NO REQUEST BODY
 
-Response: `[{"id" : Integer, "semester" : String, "classes" : [Integer]}, ...]`
+Response: `[{"id" : Integer, "semester" : String}, ...]`
 
 Errors: 404 (if semester id does not exist)
 
@@ -39,7 +39,7 @@ Errors: 404 (if semester id wasn't found)
 ---
 
 # Classes
-## `GET /classes`
+## `GET /semesters/[semester_id]/classes`
 
 NO REQUEST BODY
 
@@ -63,8 +63,6 @@ NO REQUEST BODY
 Response: `{"id" : Integer, "title" : String, "credit" : Integer, "subject": String, "assignments" : [Integer]}`
 
 Errors: 404 (if semester id is not found), 404 (if class id is not found), 500 (if class is not in that semester or semester does not contain that class)
-
-Note: assignments contains a list of assignment ids
 
 # RemoveClass
 ## `DELETE /classes/[class_id]`
@@ -90,7 +88,7 @@ Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 500 (
 
 Request Body: `{"assignmentType" : String, "expectedTime" : Integer, "dueDate" : DateTimeField, "gradePercentage" : Decimal}`
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found)
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 500 (if class is not in that semester or semester does not contain that class)
 
 Response: assignment id (Integer)
 
