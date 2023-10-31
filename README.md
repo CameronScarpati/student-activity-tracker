@@ -85,8 +85,6 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `CameronScarpati`, `student-activity-tracker`, `twitter_handle`, `cameron-scarpati`, `gmail`, `cameronscarp`, `Student Activity Tracker`, `The Student Activity Tracker is an innovative web-based tool designed to empower students in managing their academic life effectively. This comprehensive platform caters to various user stories, providing valuable features that enhance students' ability to optimize their study routines and track their progress.`
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
