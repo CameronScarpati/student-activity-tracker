@@ -223,7 +223,7 @@ class Submissions(Resource):
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
-        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -247,7 +247,7 @@ Please input a valid assignment id for this class or a valid class id for this a
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
-        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
@@ -276,7 +276,7 @@ class Submission(Resource):
             abort(404, message = "This semester id does not exist. Please input a valid semester id.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
             abort(404, message = "This class id does not exist. Please input a valid class id.")
-        if int(assignment_id) > AssignmentDB.select().count() or int(assignment_id) < 1:
+        if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
         if SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)).get() == 0:
             abort(404, message = "There are no submissions for this assignment.")
