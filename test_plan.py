@@ -6,12 +6,13 @@ import os
 from tests.semester_multitest import SemesterMultiTestSuite
 from tests.class_multitest import ClassMultiTestSuite
 from tests.assignment_multitest import AssignmentMultiTestSuite
+from tests.submission_multitest import SubmissionMultiTestSuite
 
 @test_plan(name="Student-Activity-Tracker-Tests")
 def main(plan):
     plan.add(
         MultiTest(
-            name = "Suites", suites=[SemesterMultiTestSuite(), ClassMultiTestSuite(), AssignmentMultiTestSuite()],
+            name = "Suites", suites=[SemesterMultiTestSuite(), ClassMultiTestSuite(), AssignmentMultiTestSuite(), SubmissionMultiTestSuite()],
             environment=[
                 # TODO: This should also include your DB! But right now it's hardcoded.
                 App(name="rest", binary="python",

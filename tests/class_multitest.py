@@ -11,7 +11,7 @@ class ClassMultiTestSuite(object):
         assert response.status_code == 404, "Verify /semester/<semester_id>/classes error"
 
     @testcase
-    def test_postSemester1(self, env, result):
+    def test_postSemesters1(self, env, result):
         post_data = {"semester" : "Fall 2023"}
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
@@ -20,7 +20,7 @@ class ClassMultiTestSuite(object):
         assert actual_data == 1, "Verify /semesters endpoint"
 
     @testcase
-    def test_postSemester2(self, env, result):
+    def test_postSemesters2(self, env, result):
         post_data = {"semester" : "Spring 2024"}
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()

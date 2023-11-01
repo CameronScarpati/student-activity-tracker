@@ -262,7 +262,7 @@ Please input a valid assignment id for this class or a valid class id for this a
             id += 1
         else:
             id = 1
-        submissionTime = datetime.datetime.now()
+        submissionTime = datetime.now()
 
         SubmissionDB.create(semester_id = semester_id, class_id = class_id, assignment_id = assignment_id, id = int(id)
                         , assignmentType = args["assignmentType"], actualTime = args["actualTime"]
@@ -278,25 +278,25 @@ class Submission(Resource):
             abort(404, message = "This class id does not exist. Please input a valid class id.")
         if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).exists() == False:
             abort(404, message = "This assignment id does not exist. Please input a valid assignment id.")
-        if SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)).get() == 0:
-            abort(404, message = "There are no submissions for this assignment.")
         if ClassDB.select().where(ClassDB.id == int(class_id)).get().semester_id.id != int(semester_id):
             abort(500, message = "This class id is not contained within this semester. \
 Please input a valid class id for this semester or a valid semester id for this class.")
         if AssignmentDB.select().where(AssignmentDB.id == int(assignment_id)).get().class_id.id != int(class_id):
             abort(500, message = "This assignment id is not contained within this class. \
 Please input a valid assignment id for this class or a valid class id for this assignment.")
+        if not SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)).exists():
+            abort(404, message = "There are no submissions for this assignment.")
         
+        submissionID = SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)).count()
         foundSubmission = SubmissionDB.select().where(SubmissionDB.assignment_id == int(assignment_id)
                                                       ).order_by(SubmissionDB.submissionTime.desc()).limit(1).get()
         foundAssignment = AssignmentDB.get(AssignmentDB.id == foundSubmission.assignment_id)
-        dateString = foundAssignment.dueDate
-        datetimeObj = datetime.strptime(dateString, "%Y-%m-%d %H:%M:%S")
+        datetimeObj = foundAssignment.dueDate
         dueDateJSON = datetimeObj.strftime("%Y-%m-%d %H:%M:%S")
         gradePercentage = float(foundAssignment.gradePercentage)
         submissionTimeString = foundSubmission.submissionTime.strftime("%Y-%m-%d %H:%M:%S")
 
-        return {"submissionNumber" : foundSubmission.id, "actualTime" : foundSubmission.actualTime, "expectedTime" : foundAssignment.expectedTime
+        return {"submissionNumber" : submissionID, "actualTime" : foundSubmission.actualTime, "expectedTime" : foundAssignment.expectedTime
                 , "expectedGrade" : foundSubmission.expectedGrade, "gradePercentage" : gradePercentage
                 , "submissionTime" : submissionTimeString, "dueDate" : dueDateJSON, "assignmentType" : foundAssignment.assignmentType}, 200
 
