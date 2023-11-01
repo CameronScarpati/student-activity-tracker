@@ -384,7 +384,7 @@ Please input a valid class id for this semester or a valid semester id for this 
             abort(500, message = "This assignment id is not contained within this class. \
 Please input a valid assignment id for this class or a valid class id for this assignment.")
         if FeedbackDB.select().where(FeedbackDB.assignment_id == int(assignment_id)).count() == 0:
-            abort(500, message = "Feedback has not yet been created")
+            abort(404, message = "Feedback has not yet been created")
 
         args = parser.parse_args()
         foundFeedback = FeedbackDB.get(FeedbackDB.assignment_id == assignment_id)
@@ -409,7 +409,7 @@ Please input a valid class id for this semester or a valid semester id for this 
             abort(500, message = "This assignment id is not contained within this class. \
 Please input a valid assignment id for this class or a valid class id for this assignment.")
         if FeedbackDB.select().where(FeedbackDB.assignment_id == int(assignment_id)).count() == 0:
-            abort(500, message = "Feedback has not yet been created")
+            abort(404, message = "Feedback has not yet been created")
 
         args = parser.parse_args()
         foundFeedback = FeedbackDB.get(FeedbackDB.assignment_id == assignment_id)
