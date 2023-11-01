@@ -18,7 +18,6 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -145,10 +144,41 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [x] Feature 1
+- [x] Feature 2
+- [x] Feature 3
+    - [x] Nested Feature
+    - [x] Nested Feature
+
+### Feature 1: Semester Operations
+- [x] Implement `GET /semesters`
+- [x] Implement `POST /semesters`
+- [x] Implement `GET /semesters/[semester_id]`
+- [x] Implement `DELETE /semesters/[semester_id]`
+
+### Feature 2: Class Operations
+- [x] Implement `GET /semesters/[semester_id]/classes`
+- [x] Implement `POST /semesters/[semester_id]/classes`
+- [x] Implement `GET /semesters/[semester_id]/classes/[classes_id]`
+- [x] Implement `DELETE /classes/[class_id]`
+
+### Feature 3: Assignment Operations
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/assignments`
+- [x] Implement `POST /semesters/[semester_id]/classes/[class_id]/assignments`
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]`
+- [x] Implement `DELETE /assignments/[assignment_id]`
+
+#### Nested Feature: Submission Operations
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/submissions`
+- [x] Implement `POST /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/submissions`
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/submissions/latest`
+
+#### Nested Feature: Feedback Operations
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/feedback`
+- [x] Implement `GET /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+- [x] Implement `POST /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+- [x] Implement `PUT /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
+- [x] Implement `PATCH /semesters/[semester_id]/classes/[class_id]/assignments/[assignment_id]/feedback`
 
 See the [open issues](https://github.com/CameronScarpati/student-activity-tracker/issues) for a full list of proposed features (and known issues).
 
@@ -186,7 +216,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - cameronscarp@gmail.com
+Cameron Scarpati - cameronscarp@gmail.com
 
 Project Link: [https://github.com/CameronScarpati/student-activity-tracker](https://github.com/CameronScarpati/student-activity-tracker)
 
@@ -197,7 +227,7 @@ Project Link: [https://github.com/CameronScarpati/student-activity-tracker](http
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* [Othneil Drew](I would like to extend my gratitude to [Othneil Drew](https://github.com/OthneilDrew) for providing the initial template for this README.md.)
+* [] ()
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
