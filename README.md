@@ -90,8 +90,10 @@ I undertook this project because I have always been a procrastinator, and it's a
 
 ### Built With
 
+* [![Python 3](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=ffd343)](https://www.python.org)
+
 * [![Flask](https://img.shields.io/badge/Flask-%23000000?style=for-the-badge&logo=flask)](https://palletsprojects.com/p/flask/)
-* [![SQLite](https://img.shields.io/badge/SQLite-%23003B57?style=for-the-badge&logo=sqlite)](https://www.sqlite.org/)
+* [![SQLite](https://img.shields.io/badge/SQLite-008ED2?style=for-the-badge&logo=sqlite&logoColor=003B57)](https://www.sqlite.org/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
