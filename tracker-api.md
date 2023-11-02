@@ -164,7 +164,7 @@ Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (
 
 Request Body: `{"actualGrade" : Integer, "feedback" : String/Text}`
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404, (if submission id wasn't found), 500 (if feedback is already created for that assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment), 500 (if submission is not in that assignment or assignment does not contain this submission)
+Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 404 (if assignment id wasn't found), 404, (if submission id wasn't found), 500 (if feedback is already created for that assignment), 500 (if class is not in that semester or semester does not contain that class), 500 (if assignment is not in that class or class does not contain this assignment)
 
 Response: feedback id (Integer)
 
