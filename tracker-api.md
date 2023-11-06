@@ -195,7 +195,7 @@ Errors: 404 (if semester id wasn't found), 404 (no feedback for any assignment)
 Response: Tentative Calculated GPA (Double from 0.0 -> 4.0)
 
 # ClassGrade
-## `GET /classes/<class_id>`
+## `GET /classes/<class_id>/grade`
 
 NO REQUEST BODY
 
