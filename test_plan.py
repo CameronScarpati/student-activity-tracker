@@ -8,7 +8,7 @@ from tests.class_multitest import ClassMultiTestSuite
 from tests.assignment_multitest import AssignmentMultiTestSuite
 from tests.submission_multitest import SubmissionMultiTestSuite
 from tests.feedback_multitest import FeedbackMultiTestSuite
-from tests.grades_multitest import GradeMultiTestSuite
+from tests.gpa_multitest import GPAMultiTestSuite
 
 
 @test_plan(name="Student-Activity-Tracker-Tests")
@@ -20,7 +20,7 @@ def main(plan):
                                      AssignmentMultiTestSuite(), 
                                      SubmissionMultiTestSuite(), 
                                      FeedbackMultiTestSuite(),
-                                     GradeMultiTestSuite()],
+                                     GPAMultiTestSuite()],
             environment=[
                 # TODO: This should also include your DB! But right now it's hardcoded.
                 App(name="rest", binary="python",

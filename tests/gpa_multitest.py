@@ -1,7 +1,7 @@
 from testplan.testing.multitest import testsuite, testcase, MultiTest
 
 @testsuite
-class GradeMultiTestSuite(object):
+class GPAMultiTestSuite(object):
     @testcase
     def test_getGPANoSemester(self, env, result):
         env.http_client.get("/semesters/1/GPA")
@@ -16,21 +16,6 @@ class GradeMultiTestSuite(object):
         response = env.http_client.receive()
 
         assert response.json() == 1, "Verify /semesters endpoint"
-
-    @testcase
-    def test_postSemesters2(self, env, result):
-        post_data = {"semester" : "Spring 2024"}
-        env.http_client.post("/semesters", json=post_data)
-        response = env.http_client.receive()
-
-        assert response.json() == 2, "Verify /semesters endpoint"
-
-    @testcase
-    def test_getGPANoFeedback(self, env, result):
-        env.http_client.get("/semesters/1/GPA")
-        response = env.http_client.receive()
-
-        assert response.status_code == 404, "Verify /semesters/<semester_id>/GPA error"
 
     @testcase
     def test_postClass1(self, env, result):
@@ -198,8 +183,160 @@ class GradeMultiTestSuite(object):
         assert actual_data == "7", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions endpoint"
 
     @testcase
-    def test_getGPA(self, env, result):
+    def test_postSubmissions8(self, env, result):
+        post_data = {"actualTime" : 105, "expectedGrade" : 92}
+        env.http_client.post("/semesters/1/classes/2/assignments/6/submissions", json=post_data)
+        response = env.http_client.receive()
+
+        actual_data = response.json()
+        indexOfComma = actual_data.index(",")
+        actual_data = actual_data[:indexOfComma]
+        assert actual_data == "8", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions endpoint"
+
+    @testcase
+    def test_getGPANoFeedback(self, env, result):
         env.http_client.get("/semesters/1/GPA")
         response = env.http_client.receive()
 
         assert response.status_code == 404, "Verify /semesters/<semester_id>/GPA error"
+
+    @testcase
+    def test_postFeedback1(self, env, result):
+        post_data = {"actualGrade" : 83, "feedback" : "Practice Reading"}
+        env.http_client.post("/semesters/1/classes/1/assignments/1/feedback", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "1", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_postFeedback2(self, env, result):
+        post_data = {"actualGrade" : 100, "feedback" : "Perfect"}
+        env.http_client.post("/semesters/1/classes/4/assignments/4/feedback", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "2", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_postFeedback3(self, env, result):
+        post_data = {"actualGrade" : 87, "feedback" : "Study Vocab"}
+        env.http_client.post("/semesters/1/classes/1/assignments/2/feedback", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "3", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_postFeedback4(self, env, result):
+        post_data = {"actualGrade" : 0, "feedback" : "Please Study"}
+        env.http_client.post("/semesters/1/classes/5/assignments/5/feedback", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "4", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_getGPA(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 3.0, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_postFeedback5(self, env, result):
+        post_data = {"actualGrade" : 90, "feedback" : "Awesome Work"}
+        env.http_client.post("/semesters/1/classes/2/assignments/6/feedback", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "5", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_getGPAAfterPost(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 2.94, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_putFeedback(self, env, result):
+        put_data = {"actualGrade" : 62.5, "feedback" : "Nevermind..."}
+        env.http_client.put("/semesters/1/classes/4/assignments/4/feedback", json=put_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "2", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+
+    @testcase
+    def test_getGPAAfterPut(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 2.34, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_patchFeedback(self, env, result):
+        patch_data = {"actualGrade" : 100}
+        env.http_client.patch("/semesters/1/classes/4/assignments/4/feedback", json=patch_data)
+        response = env.http_client.receive()
+
+        assert response.json() == "2", "Verify /semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback endpoint"
+    
+    @testcase
+    def test_getGPAAfterPatch(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 2.94, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_deleteAssignment6(self, env, result):
+        env.http_client.delete("/assignments/6")
+        response = env.http_client.receive()
+
+        assert response.status_code == 204, "/assignments/<assignment_id> endpoint"
+
+    @testcase
+    def test_getGPAAfterAssignmentDelete(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 3.0, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_deleteClass5(self, env, result):
+        env.http_client.delete("/class/5")
+        response = env.http_client.receive()
+
+        assert response.status_code == 204, "Verify /class/<class_id> endpoint"
+
+    @testcase
+    def test_getGPAAfterClassDelete(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert round(response.json(), 2) == 3.75, "Verify /semesters/<semester_id>/GPA endpoint"
+
+    @testcase
+    def test_deleteSemester1(self, env, result):
+        env.http_client.delete("/semesters/1")
+        response = env.http_client.receive()
+
+        assert response.status_code == 204, "Verify /semesters/<semester_id> endpoint"
+
+    @testcase
+    def test_postSemestersAgain(self, env, result):
+        post_data = {"semester" : "Fall 2023"}
+        env.http_client.post("/semesters", json=post_data)
+        response = env.http_client.receive()
+
+        assert response.json() == 1, "Verify /semesters endpoint"
+
+    @testcase
+    def test_getGPAAfterSemesterDelete(self, env, result):
+        env.http_client.get("/semesters/1/GPA")
+        response = env.http_client.receive()
+
+        assert response.status_code == 404, "Verify /semesters/<semester_id>/GPA error"
+
+    @testcase
+    def test_deleteSemester1Again(self, env, result):
+        env.http_client.delete("/semesters/1")
+        response = env.http_client.receive()
+
+        assert response.status_code == 204, "Verify /semesters/<semester_id> endpoint"

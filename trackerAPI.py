@@ -435,16 +435,21 @@ class GPA(Resource):
         totalCreditHours = 0
         totalCreditGPA = 0
         for aClass in ClassDB.select().where(ClassDB.semester_id == semester_id):
-            totalCreditHours += aClass.credits
+            totalCreditHours += aClass.credit
             gradeSum = 0
             totalPercentEarned = 0
-            for feedback in FeedbackDB.select().where(FeedbackDB.class_id == aClass.id):
-                if feedback.exists():
-                    assignment = AssignmentDB.select().where(AssignmentDB.id == feedback.assignment_id)
-                    gradeSum += feedback.actualGrade * (assignment.gradePercentage / 100)
+            if FeedbackDB.select().where(FeedbackDB.class_id == aClass.id).exists() == False:
+                totalCreditGPA += 4.0 * aClass.credit
+            else:
+                for feedback in FeedbackDB.select().where(FeedbackDB.class_id == aClass.id):
+                    if aClass.id == 4:
+                        print(feedback.actualGrade)
+                    assignment = AssignmentDB.select().where(AssignmentDB.id == feedback.assignment_id).get()
+                    gradeSum += float(feedback.actualGrade) * (float(assignment.gradePercentage) / 100.0)
                     totalPercentEarned += assignment.gradePercentage
-            totalCreditGPA += self.findGPA(self, (gradeSum / totalPercentEarned)) * aClass.credits
-        return (totalCreditGPA / totalCreditGPA)
+                totalCreditGPA += self.findGPA((gradeSum / float(totalPercentEarned)) * 100) * aClass.credit
+
+        return (totalCreditGPA / totalCreditHours)
 
     def findGPA(self, gradePercent: int):
         if gradePercent >= 92.5:
