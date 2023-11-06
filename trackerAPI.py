@@ -425,6 +425,54 @@ Please input a valid assignment id for this class or a valid class id for this a
 
         return str(foundFeedback.id), 201
 
+class GPA(Resource):
+    def get(self, semester_id: int):
+        if SemesterDB.select().where(SemesterDB.id == int(semester_id)).exists() == False:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if FeedbackDB.select().where(FeedbackDB.semester_id == int(semester_id)).count() == 0:
+            abort(404, message = "Feedback has not yet been created")
+
+        totalCreditHours = 0
+        totalCreditGPA = 0
+        for aClass in ClassDB.select().where(ClassDB.semester_id == semester_id):
+            totalCreditHours += aClass.credits
+            gradeSum = 0
+            totalPercentEarned = 0
+            for feedback in FeedbackDB.select().where(FeedbackDB.class_id == aClass.id):
+                if feedback.exists():
+                    assignment = AssignmentDB.select().where(AssignmentDB.id == feedback.assignment_id)
+                    gradeSum += feedback.actualGrade * (assignment.gradePercentage / 100)
+                    totalPercentEarned += assignment.gradePercentage
+            totalCreditGPA += self.findGPA(self, (gradeSum / totalPercentEarned)) * aClass.credits
+        return (totalCreditGPA / totalCreditGPA)
+
+    def findGPA(self, gradePercent: int):
+        if gradePercent >= 92.5:
+            return 4.0
+        elif gradePercent >= 89.5:
+            return 3.7
+        elif gradePercent >= 86.5:
+            return 3.3
+        elif gradePercent >= 82.5:
+            return 3.0
+        elif gradePercent >= 79.5:
+            return 2.7
+        elif gradePercent >= 76.5:
+            return 2.3
+        elif gradePercent >= 72.5:
+            return 2.0
+        elif gradePercent >= 69.5:
+            return 1.7
+        elif gradePercent >= 66.5:
+            return 1.3
+        elif gradePercent >= 62.5:
+            return 1.0
+        elif gradePercent >= 59.5:
+            return 0.7
+        else:
+            return 0.0
+        
+
 api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
 api.add_resource(Classes, "/semesters/<semester_id>/classes")
@@ -437,6 +485,7 @@ api.add_resource(Submissions, "/semesters/<semester_id>/classes/<class_id>/assig
 api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/submissions/latest")
 api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedback")
 api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback")
+api.add_resource(GPA, "/semesters/<semester_id>/GPA")
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=5027)
