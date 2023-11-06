@@ -24,7 +24,7 @@ class AssignmentDB(BaseModel):
     assignmentType = CharField()
     expectedTime = IntegerField()
     dueDate = DateTimeField()
-    gradePercentage = DecimalField()
+    gradePercentage = DoubleField()
     
 class SubmissionDB(BaseModel):
     semester_id = ForeignKeyField(SemesterDB, backref = "submissions")
@@ -32,7 +32,7 @@ class SubmissionDB(BaseModel):
     assignment_id = ForeignKeyField(AssignmentDB, backref = "submissions")
     id = AutoField()
     actualTime = IntegerField()
-    expectedGrade = IntegerField()
+    expectedGrade = DoubleField()
     submissionTime = DateTimeField()
 
 class FeedbackDB(BaseModel):
@@ -41,7 +41,7 @@ class FeedbackDB(BaseModel):
     assignment_id = ForeignKeyField(AssignmentDB, backref = "feedbacks")
     id = AutoField()
     feedback = TextField()
-    actualGrade = IntegerField()
+    actualGrade = DoubleField()
 
 if __name__ == "__main__":
     pass
