@@ -152,7 +152,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [x] Implement `GET /semesters/<semester_id>/GPA`
 
 #### Nested Feature: ClassGrade Operation
-- [ ] Implement `GET /classes/<class_id>/grade`
+- [x] Implement `GET /classes/<class_id>/grade`
 
 See the [open issues](https://github.com/CameronScarpati/student-activity-tracker/issues) for a full list of proposed features (and known issues).
 

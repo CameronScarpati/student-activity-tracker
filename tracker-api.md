@@ -199,7 +199,7 @@ Response: Tentative Calculated GPA (Double from 0.0 -> 4.0)
 
 NO REQUEST BODY
 
-Errors: 404 (if semester id wasn't found), 404 (if class id wasn't found), 500 (if class is not in that semester or semester does not contain that class), 404 (no feedback for any assignment)
+Errors: 404 (if class id wasn't found), 404 (no feedback for any assignment)
 
 Response: Tentative Calculated Grade (Double from 0.0 -> 100.0)
 - Things to note: People can gain extra credit, figure that out. Also, currently, people can add negative grades.

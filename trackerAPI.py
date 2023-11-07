@@ -442,8 +442,6 @@ class GPA(Resource):
                 totalCreditGPA += 4.0 * aClass.credit
             else:
                 for feedback in FeedbackDB.select().where(FeedbackDB.class_id == aClass.id):
-                    if aClass.id == 4:
-                        print(feedback.actualGrade)
                     assignment = AssignmentDB.select().where(AssignmentDB.id == feedback.assignment_id).get()
                     gradeSum += float(feedback.actualGrade) * (float(assignment.gradePercentage) / 100.0)
                     totalPercentEarned += assignment.gradePercentage
@@ -476,7 +474,22 @@ class GPA(Resource):
             return 0.7
         else:
             return 0.0
-        
+
+class ClassGrade(Resource):
+    def get(self, class_id: int):
+        if ClassDB.select().where(ClassDB.id == int(class_id)).exists() == False:
+            abort(404, message = "This class id does not exist. Please input a valid class id.")
+        if FeedbackDB.select().where(FeedbackDB.semester_id == int(class_id)).count() == 0:
+            abort(404, message = "Feedback has not yet been created")
+
+        gradeSum = 0
+        totalPercentEarned = 0
+        for feedback in FeedbackDB.select().where(FeedbackDB.class_id == class_id):
+            assignment = AssignmentDB.select().where(AssignmentDB.id == feedback.assignment_id).get()
+            gradeSum += float(feedback.actualGrade) * (float(assignment.gradePercentage) / 100.0)
+            totalPercentEarned += assignment.gradePercentage
+
+        return gradeSum / float(totalPercentEarned) * 100
 
 api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
@@ -491,6 +504,7 @@ api.add_resource(Submission, "/semesters/<semester_id>/classes/<class_id>/assign
 api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedback")
 api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback")
 api.add_resource(GPA, "/semesters/<semester_id>/GPA")
+api.add_resource(ClassGrade, "/classes/<class_id>/grade")
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=5027)
