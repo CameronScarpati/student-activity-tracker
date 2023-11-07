@@ -46,18 +46,16 @@ class FeedbackMultiTestSuite(object):
         post_data = {"semester" : "Fall 2023"}
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 1, "Verify /semesters endpoint"
+        
+        assert response.json() == 1, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemesters2(self, env, result):
         post_data = {"semester" : "Spring 2024"}
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 2, "Verify /semesters endpoint"
+        
+        assert response.json() == 2, "Verify /semesters endpoint"
 
     @testcase
     def test_getFeedbackNoClass(self, env, result):
@@ -102,36 +100,32 @@ class FeedbackMultiTestSuite(object):
         post_data = {"title" : "Multivariable Calculus", "credit" : 3, "subject" : "Mathematics"}
         env.http_client.post("/semesters/1/classes", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 1, "Verify /semesters/<semester_id>/classes endpoint"
+        
+        assert response.json() == 1, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_postClass2(self, env, result):
         post_data = {"title" : "Storytelling as Performance", "credit" : 3, "subject" : "Theater"}
         env.http_client.post("/semesters/2/classes", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 2, "Verify /semesters/<semester_id>/classes endpoint"
+        
+        assert response.json() == 2, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_postClass3(self, env, result):
         post_data = {"title" : "Program Design and Data Structures", "credit" : 3, "subject" : "Computer Science"}
         env.http_client.post("/semesters/1/classes", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 3, "Verify /semesters/<semester_id>/classes endpoint"
+        
+        assert response.json() == 3, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_postClass4(self, env, result):
         post_data = {"title" : "Atlantic History in the Digital Age", "credit" : 3, "subject" : "History"}
         env.http_client.post("/semesters/1/classes", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 4, "Verify /semesters/<semester_id>/classes endpoint"
+        
+        assert response.json() == 4, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_postClass5(self, env, result):
@@ -139,8 +133,8 @@ class FeedbackMultiTestSuite(object):
         env.http_client.post("/semesters/2/classes", json=post_data)
         response = env.http_client.receive()
 
-        actual_data = response.json()
-        assert actual_data == 5, "Verify /semesters/<semester_id>/classes endpoint"
+        
+        assert response.json() == 5, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_getFeedbackNoAssignment(self, env, result):
@@ -185,54 +179,48 @@ class FeedbackMultiTestSuite(object):
         post_data = {"assignmentType" : "Exam", "expectedTime" : 350, "dueDate" : "2023-11-07 12:35:00", "gradePercentage" : 10.0}
         env.http_client.post("/semesters/1/classes/1/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 1, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 1, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_postAssignments2(self, env, result):
         post_data = {"assignmentType" : "Homework", "expectedTime" : 120, "dueDate" : "2023-10-01 13:25:00", "gradePercentage" : 0.074}
         env.http_client.post("/semesters/1/classes/1/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 2, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 2, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_postAssignments3(self, env, result):
         post_data = {"assignmentType" : "Presentation", "expectedTime" : 20, "dueDate" : "2023-10-31 10:15:00", "gradePercentage" : 2.0}
         env.http_client.post("/semesters/2/classes/2/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 3, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 3, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_postAssignments4(self, env, result):
         post_data = {"assignmentType" : "Project", "expectedTime" : 250, "dueDate" : "2023-10-05 15:25:00", "gradePercentage" : 5.0}
         env.http_client.post("/semesters/1/classes/4/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 4, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 4, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_postAssignments5(self, env, result):
         post_data = {"assignmentType" : "Reading", "expectedTime" : 90, "dueDate" : "2023-10-03 8:45:00", "gradePercentage" : 0.5}
         env.http_client.post("/semesters/2/classes/5/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 5, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 5, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_postAssignments6(self, env, result):
         post_data = {"assignmentType" : "Quiz", "expectedTime" : 35, "dueDate" : "2023-11-19 10:45:00", "gradePercentage" : 8.2}
         env.http_client.post("/semesters/2/classes/2/assignments", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 6, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
+        
+        assert response.json() == 6, "Verify /semesters/<semester_id>/classes/<class_id>/assignments endpoint"
 
     @testcase
     def test_getFeedbackWrongSemester(self, env, result):
@@ -552,9 +540,8 @@ class FeedbackMultiTestSuite(object):
         post_data = {"title" : "AI and Society", "credit" : 3, "subject" : "Humanities"}
         env.http_client.post("/semesters/2/classes", json=post_data)
         response = env.http_client.receive()
-
-        actual_data = response.json()
-        assert actual_data == 5, "Verify /semesters/<semester_id>/classes endpoint"
+ 
+        assert response.json() == 5, "Verify /semesters/<semester_id>/classes endpoint"
 
     @testcase
     def test_getFeedbacksAfterClassDelete(self, env, result):

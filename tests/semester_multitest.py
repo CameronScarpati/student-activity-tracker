@@ -8,8 +8,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.get("/semesters")
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == [], "Verify /semesters endpoint"
+        assert response.json() == [], "Verify /semesters endpoint"
 
     @testcase
     def test_postSemesters1(self, env, result):
@@ -17,8 +16,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 1, "Verify /semesters endpoint"
+        assert response.json() == 1, "Verify /semesters endpoint"
     
     @testcase
     def test_postSemesters2(self, env, result):
@@ -26,8 +24,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 2, "Verify /semesters endpoint"
+        assert response.json() == 2, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemesters3(self, env, result):
@@ -35,8 +32,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 3, "Verify /semesters endpoint"
+        assert response.json() == 3, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemesters4(self, env, result):
@@ -44,8 +40,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 4, "Verify /semesters endpoint"
+        assert response.json() == 4, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemesters5(self, env, result):
@@ -53,8 +48,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 5, "Verify /semesters endpoint"
+        assert response.json() == 5, "Verify /semesters endpoint"
 
     @testcase
     def test_getSemestersFull(self, env, result):
@@ -67,8 +61,7 @@ class SemesterMultiTestSuite(object):
                          {"id" : 4, "semester" : "Fall 2024"},
                          {"id" : 5, "semester" : "Spring 2025"}]
         
-        actual_data = response.json()
-        assert actual_data == expected_data, "Verify /semesters endpoint"
+        assert response.json() == expected_data, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemestersSameName(self, env, result):
@@ -153,8 +146,7 @@ class SemesterMultiTestSuite(object):
                          {"id" : 3, "semester" : "Summer 2024"},
                          {"id" : 4, "semester" : "Fall 2024"}]
         
-        actual_data = response.json()
-        assert actual_data == expected_data, "Verify /semesters endpoint"
+        assert response.json() == expected_data, "Verify /semesters endpoint"
 
     @testcase
     def test_postSemestersAfterDelete(self, env, result):
@@ -162,8 +154,7 @@ class SemesterMultiTestSuite(object):
         env.http_client.post("/semesters", json=post_data)
         response = env.http_client.receive()
         
-        actual_data = response.json()
-        assert actual_data == 5, "Verify /semesters endpoint"
+        assert response.json() == 5, "Verify /semesters endpoint"
 
     @testcase
     def test_clearTable1(self, env, result):
