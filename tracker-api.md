@@ -203,3 +203,12 @@ Errors: 404 (if class id wasn't found), 404 (no feedback for any assignment)
 
 Response: Tentative Calculated Grade (Double from 0.0 -> 100.0)
 - Things to note: People can gain extra credit, figure that out. Also, currently, people can add negative grades.
+
+# AssignmentRecommendation
+## `GET /semesters/<semester_id>/recommendation`
+
+NO REQUEST BODY
+
+Errors: 404 (if semester id wasn't found)
+
+Response: Assignment ID or All Completed Message (If there are no active assignments (i.e. no assignments without submissions))

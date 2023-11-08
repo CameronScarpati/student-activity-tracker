@@ -1,5 +1,4 @@
 from testplan.testing.multitest import testsuite, testcase, MultiTest
-import time
 
 @testsuite
 class SubmissionMultiTestSuite(object):

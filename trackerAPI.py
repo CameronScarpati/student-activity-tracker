@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from trackerDatabase import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 api = Api(app)
@@ -491,6 +491,49 @@ class ClassGrade(Resource):
 
         return gradeSum / float(totalPercentEarned) * 100
 
+class AssignmentRecommendation(Resource):
+    def get(self, semester_id: int):
+        if SemesterDB.select().where(SemesterDB.id == semester_id).exists() == False:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if AssignmentDB.select().join(SubmissionDB, JOIN.LEFT_OUTER).where(SubmissionDB.id.is_null()).exists() == False:
+            return "All Assignments Completed", 200
+        
+        timeWeight = 4
+        gradeWeight = 6
+        maxAssignmentWeight = -1
+        maxAssignmentID = 0
+        for assignment in AssignmentDB.select().join(SubmissionDB, JOIN.LEFT_OUTER).where(SubmissionDB.id.is_null()):
+            timeScore = self.dueDateScore(datetime.now(), assignment.dueDate, assignment.expectedTime)
+            gradeScore = self.gradePercentScore(assignment.gradePercentage)
+            assignmentWeight = (timeScore * timeWeight) + (gradeScore * gradeWeight)
+            if assignmentWeight > maxAssignmentWeight:
+                maxAssignmentID = assignment.id
+                maxAssignmentWeight = assignmentWeight
+
+        return maxAssignmentID, 200
+        
+    def dueDateScore(self, currentTime: datetime, dueTime: datetime, expectedTime: int):
+        afterCompletion = currentTime + timedelta(minutes=expectedTime)
+        timeDifference = dueTime - afterCompletion
+        daysDifference = timeDifference.total_seconds() / (60 * 60 * 24)
+        
+        if daysDifference <= 1:
+            return 10
+        elif daysDifference <= 3:
+            return 6
+        else:
+            return 1
+
+    def gradePercentScore(self, gradePercent: float):
+        if gradePercent >= 20.0:
+            return 12
+        elif gradePercent >= 10.0:
+            return 8
+        elif gradePercent >= 5.0:
+            return 4
+        else:
+            return 1
+
 api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
 api.add_resource(Classes, "/semesters/<semester_id>/classes")
@@ -505,6 +548,7 @@ api.add_resource(Feedbacks, "/semesters/<semester_id>/classes/<class_id>/feedbac
 api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignments/<assignment_id>/feedback")
 api.add_resource(GPA, "/semesters/<semester_id>/GPA")
 api.add_resource(ClassGrade, "/classes/<class_id>/grade")
+api.add_resource(AssignmentRecommendation, "/semesters/<semester_id>/recommendation")
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=5027)
