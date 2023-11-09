@@ -157,6 +157,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 #### Nested Feature: AssignmentRecommendation Operation
 - [x] Implement `GET /semesters/<semester_id>/recommendation`
 
+#### Nested Feature: GradeExpectation Operation
+- [x] Implement `GET /semesters/<semester_id>/expectedGrades`
+
+#### Nested Feature: TimeExpectation Operation
+- [x] Implement `GET /semesters/<semester_id>/expectedTimes`
+
 See the [open issues](https://github.com/CameronScarpati/student-activity-tracker/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

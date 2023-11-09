@@ -534,6 +534,42 @@ class AssignmentRecommendation(Resource):
         else:
             return 1
 
+class GradeExpectation(Resource):
+    def get(self, semester_id: int):
+        if SemesterDB.select().where(SemesterDB.id == semester_id).exists() == False:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if FeedbackDB.select().where(FeedbackDB.semester_id == semester_id).count() == 0:
+            abort(404, message = "Feedback has not yet been created")
+
+        expectations = []
+
+        for feedback in FeedbackDB.select().where(FeedbackDB.semester_id == semester_id):
+            submission = SubmissionDB.select().where(
+                                    SubmissionDB.assignment_id == feedback.assignment_id).order_by(
+                                    SubmissionDB.submissionTime.desc()).limit(1).get()
+            expectations.append({"expectedGrade" : submission.expectedGrade, "actualGrade" : feedback.actualGrade})
+
+        return expectations
+
+class TimeExpectation(Resource):
+    def get(self, semester_id: int):
+        if SemesterDB.select().where(SemesterDB.id == semester_id).exists() == False:
+            abort(404, message = "This semester id does not exist. Please input a valid semester id.")
+        if SubmissionDB.select().where(SubmissionDB.semester_id == semester_id).count() == 0:
+            abort(404, message = "Submissions have not yet been created")
+
+        expectations = []
+
+        for assignment in AssignmentDB.select().where(AssignmentDB.semester_id == semester_id):
+            if SubmissionDB.select().where(SubmissionDB.assignment_id == assignment.id).exists():
+                submission = SubmissionDB.select().where(
+                                    SubmissionDB.assignment_id == assignment.id).order_by(
+                                    SubmissionDB.submissionTime.desc()).limit(1).get()
+                expectations.append({"expectedTime" : assignment.expectedTime,
+                                      "actualTime" : submission.actualTime})
+                
+        return expectations
+
 api.add_resource(Semesters, "/semesters")
 api.add_resource(Semester, "/semesters/<semester_id>")
 api.add_resource(Classes, "/semesters/<semester_id>/classes")
@@ -549,6 +585,8 @@ api.add_resource(Feedback, "/semesters/<semester_id>/classes/<class_id>/assignme
 api.add_resource(GPA, "/semesters/<semester_id>/GPA")
 api.add_resource(ClassGrade, "/classes/<class_id>/grade")
 api.add_resource(AssignmentRecommendation, "/semesters/<semester_id>/recommendation")
+api.add_resource(GradeExpectation, "/semesters/<semester_id>/expectedGrades")
+api.add_resource(TimeExpectation, "/semesters/<semester_id>/expectedTimes")
 
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=5027)

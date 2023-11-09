@@ -212,3 +212,21 @@ NO REQUEST BODY
 Errors: 404 (if semester id wasn't found)
 
 Response: Assignment ID or All Completed Message (If there are no active assignments (i.e. no assignments without submissions))
+
+# GradeExpectation
+## `GET /semesters/<semester_id>/expectedGrades`
+
+NO REQUEST BODY
+
+Response: `[{"expectedGrade" : Double, "actualGrade" : Double}, ...]`
+
+Errors: 404 (if semester id wasn't found), 404 (if no feedback)
+
+# TimeExpectation
+## `GET /semesters/<semester_id>/expectedTimes`
+
+NO REQUEST BODY
+
+Response: `[{"expectedTime" : Integer, "actualTime" : Integer}, ...]`
+
+Errors: 404 (if semester id wasn't found), 404 (if no submissiosn)
