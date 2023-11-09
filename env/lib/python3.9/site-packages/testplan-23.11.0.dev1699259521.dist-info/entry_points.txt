@@ -1,0 +1,2 @@
+[console_scripts]
+tpsreport = testplan.cli.tpsreport:cli

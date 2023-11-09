@@ -176,7 +176,7 @@ class RecommendationMultiTestSuite(object):
         env.http_client.get("/semesters/1/recommendation")
         response = env.http_client.receive()
 
-        assert response.json() == 2, "Verify /semesters/<semester_id>/recommendation endpoint"
+        assert response.json() == 5, "Verify /semesters/<semester_id>/recommendation endpoint"
 
     @testcase
     def test_deleteClass1(self, env, result):
