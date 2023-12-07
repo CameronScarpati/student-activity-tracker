@@ -1,4 +1,4 @@
-#!/Users/stevenscarpati/Documents/GitHub/student-activity-tracker/env/bin/python
+#!/Users/stevenscarpati/Documents/GitHub/student-activity-tracker/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
