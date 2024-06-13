@@ -21,7 +21,7 @@ Flask==2.2.5
 Flask-RESTful==0.3.10
 flask-restx==1.2.0
 fonttools==4.44.0
-idna==3.4
+idna==3.7
 imagesize==1.4.1
 importlib-metadata==6.8.0
 importlib-resources==6.1.1
