@@ -54,7 +54,7 @@ python-dateutil==2.8.2
 pytz==2023.3.post1
 pyzmq==25.1.1
 reportlab==4.0.7
-requests==2.31.0
+requests==2.32.2
 rpyc==6.0.0
 schema==0.7.5
 six==1.16.0
