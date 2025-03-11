@@ -75,8 +75,6 @@
 
 I undertook this project because I have always been a procrastinator, and it's a problem that plagues people everywhere. Often, I found myself procrastinating not because I was lazy, but because I was overwhelmed with the amount of work I had. I have since gained skills to counteract this effect, and now, I want to share them with anyone who needs it.
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
